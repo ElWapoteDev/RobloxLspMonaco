@@ -63,8 +63,8 @@
     "typeLiteral": [
       ["\\b(?:nil|string|number|boolean|thread|userdata|symbol|any)\\b", "support.type.primitive.lua"],
       ["\\b([a-zA-Z]\\w*)\\b", "entity.name.type.lua"],
-      ["\\{", "punctuation.curly", "@push"], // Object type literals and tuples
-      ["\\[", "punctuation.square", "@push"] // Arrays and lists
+      ["\\{", "punctuation.curly", "@push"],
+      ["\\[", "punctuation.square", "@push"] 
     ]
   }
 }
