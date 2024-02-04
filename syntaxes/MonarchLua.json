@@ -1,0 +1,70 @@
+{
+  "name": "Roblox Lua/Luau",
+  "tokenizer": {
+    "root": [
+      ["\\b(?:(local)\\s*)?(function)\\s*([a-zA-Z_]\\w*(?:[.:]([a-zA-Z_]\\w*))*)?\\s*(\\<[\\w\\s\\,]*\\>)?\\s*\\(", { 
+        "token": "keyword.control.lua",
+        "next": "@functionBody"
+      }],
+      ["\\b(for)\\s+(.+?)(\\bin\\b|(=))", [
+        { "token": "keyword.control.lua" },
+        { "token": "variable.parameter.lua", "next": "@forBody" }
+      ]],
+      ["\\b(?:(export)\\s+)?(type)\\s+([^=]+)\\s*(=)", { 
+        "token": "storage.type.lua",
+        "next": "@typeDefinition"
+      }],
+      { "include": "@whitespace" },
+      { "include": "@numbers" },
+      { "include": "@strings" },
+      { "include": "@comments" }
+    ],
+    "functionBody": [
+      ["\\)", { "token": "keyword.control.lua", "next": "@pop" }],
+      ["\\b_\\b", "variable.parameter.lua"],
+      ["\\b([A-Z_][A-Z0-9_]*)\\b", "variable.other.constant.lua"],
+      ["\\b([a-zA-Z_]\\w*)\\b", "variable.parameter.lua"],
+      { "include": "@typeLiteral" }
+    ],
+    "forBody": [
+      ["\\bin\\b|=", "keyword.control.lua"],
+      ["\\b_\\b", "variable.parameter.lua"],
+      ["\\b([A-Z_][A-Z0-9_]*)\\b", "variable.other.constant.lua"],
+      ["\\b([a-zA-Z_]\\w*)\\b", "variable.parameter.lua"],
+      { "include": "@typeLiteral" }
+    ],
+    "typeDefinition": [
+      ["\\s*$|;", { "token": "keyword.operator.assignment.lua", "next": "@pop" }],
+      { "include": "@typeLiteral" }
+    ],
+    "whitespace": [
+      ["[ \\t\\r\\n]+", "white"]
+    ],
+    "numbers": [
+      ["\\b0_*[xX]_*[\\da-fA-F_]+", "constant.numeric.hex.lua"],
+      ["\\b0_*[bB][01_]+", "constant.numeric.binary.lua"],
+      ["\\b\\d[\\d_]*", "constant.numeric.decimal.lua"]
+    ],
+    "strings": [
+      ["\"", { "token": "string.quoted.double.lua", "next": "@stringDouble" }],
+      ["'", { "token": "string.quoted.single.lua", "next": "@stringSingle" }]
+    ],
+    "stringDouble": [
+      ["\\\\.", "constant.character.escape.lua"],
+      ["\"", { "token": "string.quoted.double.lua", "next": "@pop" }]
+    ],
+    "stringSingle": [
+      ["\\\\.", "constant.character.escape.lua"],
+      ["'", { "token": "string.quoted.single.lua", "next": "@pop" }]
+    ],
+    "comments": [
+      ["--.*$", "comment.line.double-dash.lua"]
+    ],
+    "typeLiteral": [
+      ["\\b(?:nil|string|number|boolean|thread|userdata|symbol|any)\\b", "support.type.primitive.lua"],
+      ["\\b([a-zA-Z]\\w*)\\b", "entity.name.type.lua"],
+      ["\\{", "punctuation.curly", "@push"], // Object type literals and tuples
+      ["\\[", "punctuation.square", "@push"] // Arrays and lists
+    ]
+  }
+}
